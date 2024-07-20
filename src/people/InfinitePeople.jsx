@@ -12,7 +12,7 @@ const fetchUrl = async (url) => {
 export function InfinitePeople() {
   // here we using use infinite and getting:
   // data as pages, fetchNextPage to move on next page and has next page as boolean to check
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetching } = useInfiniteQuery({
     // we need query key
     queryKey: ["sw-people"],
     // in query function we get prop page param and we can set as default which will fetch
@@ -22,5 +22,24 @@ export function InfinitePeople() {
       return lastPage.next || undefined;
     },
   });
-  return <InfiniteScroll />;
+  return (
+    // we need here for infinite scroll some props to make it work
+    <InfiniteScroll
+      initialLoad={false}
+      children={data?.pages?.map((pageData) => {
+        return pageData.results.map((person) => (
+          <Person
+            key={person.name}
+            name={person.name}
+            hairColor={person.hair_color}
+            eyeColor={person.eye_color}
+          />
+        ));
+      })}
+      loadMore={() => {
+        if (!isFetching) fetchNextPage();
+      }}
+      hasMore={hasNextPage}
+    />
+  );
 }
