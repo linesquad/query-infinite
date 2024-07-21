@@ -33,7 +33,9 @@ export function InfinitePeople() {
 
   if (isLoading) return <div className="loading">loading...</div>;
 
-  if (isError) return <div>{error.toString()}</div>;
+  if (isError) return <div>{error.message}</div>;
+
+  console.log(data);
 
   return (
     // we need here for infinite scroll some props to make it work
